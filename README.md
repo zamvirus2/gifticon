@@ -64,6 +64,8 @@ msaez.io를 통해 구현한 Aggregate 단위로 Entity를 구성하였다. (2. 
 
 Entity Pattern과 Repository Pattern을 사용하기 위해 Spring Data REST의 RestRepository를 적용하였다.
 
+DDD 적용 후 REST API 테스트를 통해 정상 동작 확인하였다.
+
 **Gifticon 서비스의 gifticon.java**
 
 ```java
@@ -180,6 +182,31 @@ public class PolicyHandler{
     public void whatever(@Payload String eventString){}
 }
 ```
+
+
+### 2.4. Saga, CQRS, Correlation, Req/Resp
+
+기프티콘 구매 시스템의 각 마이크로 서비스별 역할은 다음과 같다.
+마이크로 서비스간 통신은 기본적으로 Pub/Sub 을 통한 Event Driven 구조로 동작한다.
+
+![image](https://user-images.githubusercontent.com/84003381/124505609-dafa3c00-de04-11eb-8da9-a2bd444bfd40.png)
+
+
+|Name|Description|
+|:----|:----|
+|Saga|- 마이크로 서비스간 통신은 Kafka를 통해 Pub/Sub 통신하도록 구성함. 이를 통해 Event Driven 구조로 각 단계가 진행되도록 함
+- 아래 테스트 시나리오의 전 구간 참조|
+|CQRS|- mypage 서비스의 경우의 경우, 각 마이크로 서비스로부터 Pub/Sub 구조를 통해 받은 데이터를 이용하여 자체 DB로 View를 구성함.
+- 이를 통해 여러 마이크로 서비스에 존재하는 DB간의 Join 등이 필요 없으며, 성능에 대한 이슈없이 빠른 조회가 가능함.
+- 테스트 시나리오의 3.4 과 5.4 항목에 해당|
+|Correlation|- 장바구니에 담게되면 cart > mypage(장바구니 담기내역), cart > payment > mypage(결제 및 결제취소 내역)로 진행되고, 장바구니 취소가 되면 각 status가 paymentCanceled로 Update 되는 것을 볼 수 있다.
+- 또한 Correlation Key를 구현하기 위해 각 마이크로서비스에서 관리하는 데이터의 Id값을 전달받아서 서비스간의 연관 처리를 수행하였다.
+- 이 결과로 서로 다른 마이크로 서비스 간에 트랜잭션이 묶여 있음을 알 수 있다.
+|
+|Req/Resp|- gifticon 마이크로서비스의 구매가능 수량을 초과하여 장바구니에 담기를 시도할때는, cart 마이크로서비스에서 진행이 되지 않도록 처리함
+- FeignClient 를 이용한 Req/Resp 연동
+- 테스트 시나리오의 2.1, 2.2, 2.3 항목에 해당하며, 동기호출 결과는 3.1(담기 성공시)과 5.1(담기 실패시)에서 확인할 수 있다.|
+
 
 
 
