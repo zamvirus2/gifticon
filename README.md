@@ -320,6 +320,10 @@ gateway 테스트는 3.2 항목 > 구현기능 점검 테스트 시나리오에 
 
 ### 4.1. Deploy
 
+
+![image](https://user-images.githubusercontent.com/84003381/124511760-d7b97d00-de11-11eb-9f91-b7772966c9dd.png)
+
+
 **1) Namespace 생성**
 ```
 kubectl create ns gifticon
@@ -334,9 +338,40 @@ git clone https://github.com/zamvirus2/gifticon.git
 처음에 git clone 할때 캡쳐를 못찍어서, 이미 git clone 되어 있는 화면으로 대체함
 ![image](https://user-images.githubusercontent.com/84003381/124512369-21569780-de13-11eb-8e33-a9c787fad471.png)
 
+**3) 빌드하기**
+```
+cd gifticon/gifticon
+mvn package
+
+cd gifticon/cart
+mvn package
+
+cd gifticon/payment
+mvn package
+
+cd gifticon/mypage
+mvn package
+
+cd gifticon/gateway
+mvn package
+```
+![image](https://user-images.githubusercontent.com/84003381/124512842-52839780-de14-11eb-90e4-e263c77ac1bc.png)
 
 
-![image](https://user-images.githubusercontent.com/84003381/124511760-d7b97d00-de11-11eb-9f91-b7772966c9dd.png)
+
+**4) Docker 이미지 빌드 및 Azure Registry에 Push**
+```
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/gifticon:latest .
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/cart:latest .
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/payment:latest .
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/mypage:latest .
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/gateway:latest .
+```
+![image](https://user-images.githubusercontent.com/84003381/124513260-5d8af780-de15-11eb-8ed0-ae0d3c3b4fd1.png)
+
+
+
+
 
 
 
