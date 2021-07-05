@@ -369,12 +369,34 @@ az acr build --registry user05skccacr --image user05skccacr.azurecr.io/gateway:l
 ```
 ![image](https://user-images.githubusercontent.com/84003381/124513260-5d8af780-de15-11eb-8ed0-ae0d3c3b4fd1.png)
 
+Azure Portal에서 결과 확인
+![image](https://user-images.githubusercontent.com/84003381/124513451-cecaaa80-de15-11eb-8a8f-d6fe6da518f3.png)
 
 
+**5) 컨테이너 생성 : deployment 생성, service 생성**
+```
+kubectl create deploy gifticon --image=user05skccacr.azurecr.io/gifticon:latest -n gifticon
+kubectl create deploy cart --image=user05skccacr.azurecr.io/cart:latest -n gifticon
+kubectl create deploy payment --image=user05skccacr.azurecr.io/payment:latest -n gifticon
+kubectl create deploy mypage --image=user05skccacr.azurecr.io/mypage:latest -n gifticon
+kubectl create deploy gateway --image=user05skccacr.azurecr.io/gateway:latest -n gifticon
+
+kubectl expose deploy gifticon --type="ClusterIP" --port=8080 -n gifticon
+kubectl expose deploy cart --type="ClusterIP" --port=8080 -n gifticon
+kubectl expose deploy payment --type="ClusterIP" --port=8080 -n gifticon
+kubectl expose deploy mypage --type="ClusterIP" --port=8080 -n gifticon
+kubectl expose deploy gateway --type="ClusterIP" --port=8080 -n gifticon
+
+kubectl get all -n gifticon
+```
+![image](https://user-images.githubusercontent.com/84003381/124513899-c4f57700-de16-11eb-8834-37513f3872f5.png)
 
 
-
-
+**6) deployment.yml 을 사용한 배포
+```
+kubectl apply -f kubernetes/deployment.yml
+```
+deployment가 없으면 생성하고, deployment가 있으면 변경사항 업데이트 수행
 
 
 
