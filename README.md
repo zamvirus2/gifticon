@@ -206,7 +206,8 @@ public class PolicyHandler{
 
 - http POST http://gifticon:8080/gifticons gifticonId="1" name="Americano" availableQuantity="100" price="5000"
 
-![image](https://user-images.githubusercontent.com/84003381/124507494-d768b400-de08-11eb-94c2-f3aabdf09a73.png)
+![image](https://user-images.githubusercontent.com/84003381/124507593-0e3eca00-de09-11eb-9111-07b0197efb75.png)
+
 
 
 
@@ -217,18 +218,23 @@ public class PolicyHandler{
 
 - http POST http://cart:8080/carts gifticonId="1" quantity="10"
 
+![image](https://user-images.githubusercontent.com/84003381/124507693-4b0ac100-de09-11eb-866f-e7a1665d0298.png)
+
+
 2.2 정상처리 (예약번호 #2)
 
 - http POST http://cart:8080/carts gifticonId="1" quantity="15"
 
-![image](https://user-images.githubusercontent.com/84000853/122401281-6aa38c00-cfb7-11eb-82f1-e86f114466c5.png)
+![image](https://user-images.githubusercontent.com/84003381/124507797-860cf480-de09-11eb-812a-811722078585.png)
+
 
 2.3 MD가 관리하는 기프티콘 정보의 잔여 수량을 초과하면 카트에 담기지 않도록 처리함
 
 - FeignClient를 이용한 Req/Resp 연동
 - http POST http://cart:8080/carts gifticonId="1" quantity="200"
 
-![image](https://user-images.githubusercontent.com/84000853/122401363-7bec9880-cfb7-11eb-88b6-4fb3febc23f7.png)
+![image](https://user-images.githubusercontent.com/84003381/124507897-bfddfb00-de09-11eb-9756-7cc7e8292638.png)
+
 
 
 
@@ -236,15 +242,16 @@ public class PolicyHandler{
 
 3.1 기프티콘 정보 조회 (수량 차감여부 확인)  --> 수량이 75로 줄어듦
 - http GET http://gifticon:8080/gifticons/1
-![image](https://user-images.githubusercontent.com/84000853/122401410-87d85a80-cfb7-11eb-96a2-a63c95ebba9d.png)
+![image](https://user-images.githubusercontent.com/84003381/124507999-f4ea4d80-de09-11eb-9b93-54ac162393f3.png)
    
 3.2 요금결제 내역 조회     --> 2 Row 생성 : Cart 생성 2건 후 > PaymentApproved 로 업데이트됨
 - http GET http://payment:8080/payments
-![image](https://user-images.githubusercontent.com/84000853/122401517-a50d2900-cfb7-11eb-814f-a8eb7789d8a6.png)
+![image](https://user-images.githubusercontent.com/84003381/124508169-50b4d680-de0a-11eb-955e-3f32b4dcb2d1.png)
 
 3.3 마이페이지 조회        --> 2 Row 생성 : Cart 생성 2건 후 > PaymentApproved 로 업데이트됨
 - http GET http://mypage:8080/mypages
-![image](https://user-images.githubusercontent.com/84000853/122401619-bb1ae980-cfb7-11eb-874c-af75fc0fde93.png)
+![image](https://user-images.githubusercontent.com/84003381/124508419-d9337700-de0a-11eb-80aa-8a8731498c08.png)
+
 
 
 
@@ -254,14 +261,16 @@ public class PolicyHandler{
 
 - http DELETE http://cart:8080/carts/1
 
-![image](https://user-images.githubusercontent.com/84000853/122401687-c837d880-cfb7-11eb-983f-7b653ebe25da.png)
+![image](https://user-images.githubusercontent.com/84003381/124508494-03853480-de0b-11eb-8e8d-b214b2fdda2c.png)
+
 
    
 4.2 취소내역 확인 (예약번호 #2만 남음)
 
 - http GET http://cart:8080/carts
 
-![image](https://user-images.githubusercontent.com/84000853/122401728-d128aa00-cfb7-11eb-9eb1-9b08498328ea.png)
+![image](https://user-images.githubusercontent.com/84003381/124508571-329ba600-de0b-11eb-9c1d-4c08ed46fb45.png)
+
 
 
 
@@ -269,15 +278,16 @@ public class PolicyHandler{
 
 5.1 기프티콘 정보 조회 (수량 증가여부 확인)  --> 수량이 85로 늘어남
 - http GET http://gifticon:8080/gifticons/1
-![image](https://user-images.githubusercontent.com/84000853/122401785-e1408980-cfb7-11eb-95f9-31487e09c955.png)
+![image](https://user-images.githubusercontent.com/84003381/124508657-57901900-de0b-11eb-9463-98d7953b56ad.png)
 
 5.2 요금결제 내역 조회    --> 1번 카트에 대한 결제건이 paymentCancelled 로 업데이트됨
 - http GET http://payment:8080/payments
-![image](https://user-images.githubusercontent.com/84000853/122401809-e69dd400-cfb7-11eb-8216-8fb55d87c36f.png)
+![image](https://user-images.githubusercontent.com/84003381/124508808-8908e480-de0b-11eb-9a19-658e88ee51a7.png)
 
 5.3 마이페이지 조회       --> 1번 카트에 대한 결제건이 paymentCancelled 로 업데이트됨
 - http GET http://mypage:8080/mypages
-![image](https://user-images.githubusercontent.com/84000853/122401898-f87f7700-cfb7-11eb-86ee-7e5b7ce2d814.png)
+![image](https://user-images.githubusercontent.com/84003381/124508873-af2e8480-de0b-11eb-81b6-e7ac9052b6fd.png)
+
 
        
 
