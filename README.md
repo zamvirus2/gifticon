@@ -206,7 +206,8 @@ public class PolicyHandler{
 
 - http POST http://gifticon:8080/gifticons gifticonId="1" name="Americano" availableQuantity="100" price="5000"
 
-![image](https://user-images.githubusercontent.com/84000853/122401028-316b1c00-cfb7-11eb-9f20-32f02f150fc9.png)
+![image](https://user-images.githubusercontent.com/84003381/124507494-d768b400-de08-11eb-94c2-f3aabdf09a73.png)
+
 
 
 
