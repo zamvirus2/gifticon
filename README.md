@@ -318,4 +318,15 @@ gateway 테스트는 3.2 항목 > 구현기능 점검 테스트 시나리오에 
 
 ## 4. 서비스 운영
 
+### 4.1. Deploy
+
+
+
+![image](https://user-images.githubusercontent.com/84003381/124511760-d7b97d00-de11-11eb-9f91-b7772966c9dd.png)
+
+
+
+
+
+
 
