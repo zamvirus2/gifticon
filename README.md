@@ -392,12 +392,37 @@ kubectl get all -n gifticon
 ![image](https://user-images.githubusercontent.com/84003381/124513899-c4f57700-de16-11eb-8834-37513f3872f5.png)
 
 
-**6) deployment.yml 을 사용한 배포
+**6) deployment.yml 을 사용한 배포**
 ```
 kubectl apply -f kubernetes/deployment.yml
 ```
 deployment가 없으면 생성하고, deployment가 있으면 변경사항 업데이트 수행
 
 
+### 4.2. Circuit Breaker (동기식 호출시 장애전파 차단)
+
+- 장바구니 담기(cart)에서 기프티콘 정보(gifticon)으로의 연결시 RESTful Request/Response 로 연동하여 구현이 되어있으며, 장바구니 쇼핑요청이 과도할 경우 Circuit Breaker를 통해 장애격리
+- Hystrix 설정: 요청처리 쓰레드에서 처리시간이 250 밀리가 넘어서기 시작하여 어느정도 유지되면 Circuit Breaker가 닫히도록 (요청을 빠르게 실패처리, 차단) 설정
+
+Circuit Breaker 추가 파일 : gifticon/cart/src/main/resources/application.yml
+![image](https://user-images.githubusercontent.com/84003381/124514902-1272e380-de19-11eb-93e7-6371f408d7ae.png)
+
+
+- 부하테스터 siege 툴 수행을 위한 접속
+```
+kubectl exec -it pod/siege-d484db9c-sksnb -c siege -n gifticon -- /bin/bash
+```
+![image](https://user-images.githubusercontent.com/84003381/124516019-c37a7d80-de1b-11eb-9bf6-8825f62cd690.png)
+
+
+- 부하테스트 동시사용자 100명, 60초 동안 장바구니 쇼핑 실시
+```
+siege -c100 -t60S -r10 -v --content-type "application/json" 'http://cart:8080/carts POST {"gifticonId": "1004", "quantity":1}'
+```
+
+- 부하가 발생하면서 Circuit Breaker가 동작하여 요청 실패처리되었고, 밀린 부하가 gifticon에서 처리되면서 다시 cart 요청 받기 시작
+
+
+서킷브레이킹 동작확인완료
 
 
