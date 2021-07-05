@@ -420,9 +420,9 @@ kubectl exec -it pod/siege-d484db9c-sksnb -c siege -n gifticon -- /bin/bash
 siege -c100 -t60S -r10 -v --content-type "application/json" 'http://cart:8080/carts POST {"gifticonId": "1004", "quantity":1}'
 ```
 
-- 부하가 발생하면서 Circuit Breaker가 동작하여 요청 실패처리되었고, 밀린 부하가 gifticon에서 처리되면서 다시 cart 요청 받기 시작
+- 부하가 발생하면서 Circuit Breaker가 동작하여 요청 실패처리되었고, 밀린 부하가 gifticon에서 처리되면 다시 cart 요청 받기 시작
+![image](https://user-images.githubusercontent.com/84003381/124516429-937faa00-de1c-11eb-91b6-6052cccbadc1.png)
+![image](https://user-images.githubusercontent.com/84003381/124516490-b611c300-de1c-11eb-9d31-31b8d8f3dda3.png)
 
-
-서킷브레이킹 동작확인완료
 
 
