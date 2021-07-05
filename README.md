@@ -28,3 +28,9 @@
     3.1 고객이 상시 쇼핑, 결제 내역을 조회 할 수 있도록 성능을 고려하여 별도의 view(MyPage)로 구성한다. --> CQRS
 ```
 
+
+## 2. 분석/설계
+
+### Event Storming 결과
+![image](https://user-images.githubusercontent.com/84003381/124440962-2802f180-ddb6-11eb-84ee-d3ab33009009.png)
+
