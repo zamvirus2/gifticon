@@ -38,3 +38,148 @@
 ### 헥사고날 아키텍처 다이어그램
 ![image](https://user-images.githubusercontent.com/84003381/124442984-3d791b00-ddb8-11eb-891a-7890e17004ab.png)
 
+
+## 3. 구현
+
+분석/설계 단계를 통해 각 마이크로서비스를 도출하였으며, 각 서비스를 로컬환경에서 아래와 같이 실행하였다.
+로컬에서 각각의 포트번호는 8081~8084 이다.
+```
+  cd gifticon
+  mvn spring-boot:run  
+  
+  cd cart
+  mvn spring-boot:run  
+
+  cd payment
+  mvn spring-boot:run
+
+  cd mypage
+  mvn spring-boot:run  
+```
+
+
+### 3.1. DDD 적용
+
+msaez.io를 통해 구현한 Aggregate 단위로 Entity를 구성하였다. (2. 분석/설계 참조)
+
+Entity Pattern과 Repository Pattern을 사용하기 위해 Spring Data REST의 RestRepository를 적용하였다.
+
+**Gifticon 서비스의 gifticon.java**
+
+```java
+package gifticon;
+
+import javax.persistence.*;
+import org.springframework.beans.BeanUtils;
+import java.util.List;
+import java.util.Date;
+
+@Entity
+@Table(name="Gifticon_table")
+public class Gifticon {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
+    private Long gifticonId;
+    private String name;
+    private Integer availableQuantity;
+    private Long price;
+
+    @PostPersist
+    public void onPostPersist(){
+        GifticonRegistered gifticonRegistered = new GifticonRegistered();
+        BeanUtils.copyProperties(this, gifticonRegistered);
+        gifticonRegistered.publishAfterCommit();
+    }
+
+    @PostUpdate
+    public void onPostUpdate(){
+        QuantityModified quantityModified = new QuantityModified();
+        BeanUtils.copyProperties(this, quantityModified);
+        quantityModified.publishAfterCommit();
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public Long getGifticonId() {
+        return gifticonId;
+    }
+    public void setGifticonId(Long gifticonId) {
+        this.gifticonId = gifticonId;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Integer getAvailableQuantity() {
+        return availableQuantity;
+    }
+    public void setAvailableQuantity(Integer availableQuantity) {
+        this.availableQuantity = availableQuantity;
+    }
+    public Long getPrice() {
+        return price;
+    }
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+}
+```
+
+
+**Payment 서비스의 PolicyHandler.java**
+
+```java
+package gifticon;
+
+import gifticon.config.kafka.KafkaProcessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PolicyHandler{
+    @Autowired PaymentRepository paymentRepository;
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverCartAdded_ApprovePayment(@Payload CartAdded cartAdded){
+
+        if(!cartAdded.validate()) return;
+
+        System.out.println("\n\n##### listener ApprovePayment : " + cartAdded.toJson() + "\n\n");
+
+        Payment payment = new Payment();
+        payment.setCartId(cartAdded.getId());
+        payment.setStatus("PaymentApproved");
+        paymentRepository.save(payment);
+    }
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverCartRemoved_CancelPayment(@Payload CartRemoved cartRemoved){
+
+        if(!cartRemoved.validate()) return;
+
+        System.out.println("\n\n##### listener CancelPayment : " + cartRemoved.toJson() + "\n\n");
+
+        Payment payment = paymentRepository.findByCartId(cartRemoved.getId());
+        payment.setStatus("PaymentCanceled");
+        paymentRepository.save(payment);
+    }
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whatever(@Payload String eventString){}
+}
+```
+
+
+
