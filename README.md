@@ -36,4 +36,5 @@
 
 
 ### 헥사고날 아키텍처 다이어그램
-![image](https://user-images.githubusercontent.com/84003381/124442543-d0fe1c00-ddb7-11eb-83d4-b7555cc22c6f.png)
+![image](https://user-images.githubusercontent.com/84003381/124442984-3d791b00-ddb8-11eb-891a-7890e17004ab.png)
+
