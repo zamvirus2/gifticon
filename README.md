@@ -315,3 +315,7 @@ gateway > application.yml 내 gateway 설정
 gateway 테스트는 3.2 항목 > 구현기능 점검 테스트 시나리오에 캡쳐로 첨부한 이미지가 모두 gateway 접속에 해당됩니다.
 
 
+
+## 4. 서비스 운영
+
+
