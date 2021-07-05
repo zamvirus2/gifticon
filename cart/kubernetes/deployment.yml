@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: cart
-          image: username/cart:latest
+          image: user05skccacr.azurecr.io/cart:latest
           ports:
             - containerPort: 8080
           readinessProbe:
