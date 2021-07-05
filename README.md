@@ -320,6 +320,20 @@ gateway 테스트는 3.2 항목 > 구현기능 점검 테스트 시나리오에 
 
 ### 4.1. Deploy
 
+**1) Namespace 생성**
+```
+kubectl create ns gifticon
+kubectl get ns
+```
+![image](https://user-images.githubusercontent.com/84003381/124512080-83fb6380-de12-11eb-9687-96c498ab139b.png)
+
+**2) git에서 소스 clone으로 가져오기**
+```
+git clone https://github.com/zamvirus2/gifticon.git
+```
+처음에 git clone 할때 캡쳐를 못찍어서, 이미 git clone 되어 있는 화면으로 대체함
+![image](https://user-images.githubusercontent.com/84003381/124512369-21569780-de13-11eb-8e33-a9c787fad471.png)
+
 
 
 ![image](https://user-images.githubusercontent.com/84003381/124511760-d7b97d00-de11-11eb-9f91-b7772966c9dd.png)
