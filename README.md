@@ -184,7 +184,7 @@ public class PolicyHandler{
 ```
 
 
-### 2.4. Saga, CQRS, Correlation, Req/Resp
+### 3.2. Saga, CQRS, Correlation, Req/Resp
 
 기프티콘 구매 시스템의 각 마이크로 서비스별 역할은 다음과 같다.
 마이크로 서비스간 통신은 기본적으로 Pub/Sub 을 통한 Event Driven 구조로 동작한다.
@@ -202,7 +202,7 @@ public class PolicyHandler{
 
 **<구현기능 점검 시나리오>**
 
-**1. MD가 기프티콘 정보 등록**
+**1) MD가 기프티콘 정보 등록**
 
 - http POST http://gifticon:8080/gifticons gifticonId="1" name="Americano" availableQuantity="100" price="5000"
 
@@ -212,23 +212,23 @@ public class PolicyHandler{
 
 
 
-**2. 사용자가 기프티콘 카트에 담기**
+**2) 사용자가 기프티콘 카트에 담기**
 
-2.1 정상처리 (예약번호 #1)
+2-1) 정상처리 (예약번호 #1)
 
 - http POST http://cart:8080/carts gifticonId="1" quantity="10"
 
 ![image](https://user-images.githubusercontent.com/84003381/124507693-4b0ac100-de09-11eb-866f-e7a1665d0298.png)
 
 
-2.2 정상처리 (예약번호 #2)
+2-2) 정상처리 (예약번호 #2)
 
 - http POST http://cart:8080/carts gifticonId="1" quantity="15"
 
 ![image](https://user-images.githubusercontent.com/84003381/124507797-860cf480-de09-11eb-812a-811722078585.png)
 
 
-2.3 MD가 관리하는 기프티콘 정보의 잔여 수량을 초과하면 카트에 담기지 않도록 처리함
+2-3) MD가 관리하는 기프티콘 정보의 잔여 수량을 초과하면 카트에 담기지 않도록 처리함
 
 - FeignClient를 이용한 Req/Resp 연동
 - http POST http://cart:8080/carts gifticonId="1" quantity="200"
@@ -238,26 +238,26 @@ public class PolicyHandler{
 
 
 
-**3. 기프티콘 카트에 담기 후, 각 마이크로 서비스내 Pub/Sub을 통해 변경된 데이터 확인**
+**3) 기프티콘 카트에 담기 후, 각 마이크로 서비스내 Pub/Sub을 통해 변경된 데이터 확인**
 
-3.1 기프티콘 정보 조회 (수량 차감여부 확인)  --> 수량이 75로 줄어듦
+3-1) 기프티콘 정보 조회 (수량 차감여부 확인)  --> 수량이 75로 줄어듦
 - http GET http://gifticon:8080/gifticons/1
 ![image](https://user-images.githubusercontent.com/84003381/124507999-f4ea4d80-de09-11eb-9b93-54ac162393f3.png)
    
-3.2 요금결제 내역 조회     --> 2 Row 생성 : Cart 생성 2건 후 > PaymentApproved 로 업데이트됨
+3-2) 요금결제 내역 조회     --> 2 Row 생성 : Cart 생성 2건 후 > PaymentApproved 로 업데이트됨
 - http GET http://payment:8080/payments
 ![image](https://user-images.githubusercontent.com/84003381/124508169-50b4d680-de0a-11eb-955e-3f32b4dcb2d1.png)
 
-3.3 마이페이지 조회        --> 2 Row 생성 : Cart 생성 2건 후 > PaymentApproved 로 업데이트됨
+3-3) 마이페이지 조회        --> 2 Row 생성 : Cart 생성 2건 후 > PaymentApproved 로 업데이트됨
 - http GET http://mypage:8080/mypages
 ![image](https://user-images.githubusercontent.com/84003381/124508419-d9337700-de0a-11eb-80aa-8a8731498c08.png)
 
 
 
 
-**4. 사용자가 카트담기 취소**
+**4) 사용자가 카트담기 취소**
 
-4.1 예약번호 #1을 취소함
+4-1) 예약번호 #1을 취소함
 
 - http DELETE http://cart:8080/carts/1
 
@@ -265,7 +265,7 @@ public class PolicyHandler{
 
 
    
-4.2 취소내역 확인 (예약번호 #2만 남음)
+4-2) 취소내역 확인 (예약번호 #2만 남음)
 
 - http GET http://cart:8080/carts
 
@@ -274,21 +274,37 @@ public class PolicyHandler{
 
 
 
-**5. 카트담기 취소 후, 각 마이크로 서비스내 Pub/Sub을 통해 변경된 데이터 확인**
+**5) 카트담기 취소 후, 각 마이크로 서비스내 Pub/Sub을 통해 변경된 데이터 확인**
 
-5.1 기프티콘 정보 조회 (수량 증가여부 확인)  --> 수량이 85로 늘어남
+5-1) 기프티콘 정보 조회 (수량 증가여부 확인)  --> 수량이 85로 늘어남
 - http GET http://gifticon:8080/gifticons/1
 ![image](https://user-images.githubusercontent.com/84003381/124508657-57901900-de0b-11eb-9463-98d7953b56ad.png)
 
-5.2 요금결제 내역 조회    --> 1번 카트에 대한 결제건이 paymentCancelled 로 업데이트됨
+5-2) 요금결제 내역 조회    --> 1번 카트에 대한 결제건이 paymentCancelled 로 업데이트됨
 - http GET http://payment:8080/payments
 ![image](https://user-images.githubusercontent.com/84003381/124508808-8908e480-de0b-11eb-9a19-658e88ee51a7.png)
 
-5.3 마이페이지 조회       --> 1번 카트에 대한 결제건이 paymentCancelled 로 업데이트됨
+5-3) 마이페이지 조회       --> 1번 카트에 대한 결제건이 paymentCancelled 로 업데이트됨
 - http GET http://mypage:8080/mypages
 ![image](https://user-images.githubusercontent.com/84003381/124508873-af2e8480-de0b-11eb-81b6-e7ac9052b6fd.png)
 
 
        
+
+### 3.3. Polyglot Persistence 구조
+cart, payment, mypage 서비스는 H2 DB를 사용하도록 구성하고, gifticon 서비스는 HSQLDB 를 사용하도록 구성하였다.
+DB 부분을 Polyglot 구조로 동작하도록 처리하였다.
+
+
+**1) gifticon 서비스 : pom.xml 내 DB설정 및 spring boot 기동로그**
+
+![image](https://user-images.githubusercontent.com/84003381/124509581-36c8c300-de0d-11eb-8066-01e350fa6bb6.png)
+![image](https://user-images.githubusercontent.com/84003381/124510050-046b9580-de0e-11eb-9b25-a88a65fb97e2.png)
+
+
+**2) payment 서비스 : pom.xml 내 DB설정 및 spring boot 기동로그**
+
+![image](https://user-images.githubusercontent.com/84003381/124510117-26651800-de0e-11eb-83de-ef2012059987.png)
+![image](https://user-images.githubusercontent.com/84003381/124510366-9a9fbb80-de0e-11eb-837a-10f494a6d710.png)
 
 
