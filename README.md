@@ -200,7 +200,7 @@ public class PolicyHandler{
 |Req/Resp|- gifticon 마이크로서비스의 구매가능 수량을 초과하여 장바구니에 담기를 시도할때는, cart 마이크로서비스에서 진행이 되지 않도록 처리함<br>- FeignClient 를 이용한 Req/Resp 연동<br>- 테스트 시나리오의 2.1, 2.2, 2.3 항목에 해당하며, 동기호출 결과는 3.1(담기 성공시)과 5.1(담기 취소시)에서 확인할 수 있다.|
 
 
-**<구현기능 점검 시나리오>**
+**<구현기능 점검 테스트 시나리오>**
 
 **1) MD가 기프티콘 정보 등록**
 
@@ -306,5 +306,12 @@ DB 부분을 Polyglot 구조로 동작하도록 처리하였다.
 
 ![image](https://user-images.githubusercontent.com/84003381/124510117-26651800-de0e-11eb-83de-ef2012059987.png)
 ![image](https://user-images.githubusercontent.com/84003381/124510366-9a9fbb80-de0e-11eb-837a-10f494a6d710.png)
+
+
+### 3.4. Gateway 사용
+gateway > application.yml 내 gateway 설정
+![image](https://user-images.githubusercontent.com/84003381/124511000-033b6800-de10-11eb-856a-c3ac002be9c4.png)
+
+gateway 테스트는 3.2 항목 > 구현기능 점검 테스트 시나리오에 캡쳐로 첨부한 이미지가 모두 gateway 접속에 해당됩니다.
 
 
