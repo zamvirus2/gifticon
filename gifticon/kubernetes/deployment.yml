@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: gifticon
-          image: username/gifticon:latest
+          image: user05skccacr.azurecr.io/gifticon:latest
           ports:
             - containerPort: 8080
           readinessProbe:
