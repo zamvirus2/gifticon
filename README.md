@@ -34,3 +34,6 @@
 ### Event Storming 결과
 ![image](https://user-images.githubusercontent.com/84003381/124440962-2802f180-ddb6-11eb-84ee-d3ab33009009.png)
 
+
+### 헥사고날 아키텍처 다이어그램
+![image](https://user-images.githubusercontent.com/84003381/124442543-d0fe1c00-ddb7-11eb-83d4-b7555cc22c6f.png)
