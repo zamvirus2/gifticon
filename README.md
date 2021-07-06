@@ -469,5 +469,44 @@ siege -c200 -t120S -r10 -v --content-type "application/json" 'http://cart:8080/c
 
 
 
+### Zero-downtime deploy (Readiness Probe)
+
+- Zero-downtime deploy를 확인하기 위해 autoscale 설정 및 circuit breaker 설정 제거
+```
+cd cart/src/main/resources
+vi application.yml
+
+kubectl delete hpa cart -n gifticon
+kubectl get hpa -n gifticon
+```
+
+- cart 서비스에서 readiness probe 설정을 제거하고 다시 배포
+![image](https://user-images.githubusercontent.com/84003381/124536379-d8bece80-de52-11eb-83dc-64316f633d18.png)
+
+```
+mvn package
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/cart:latest .
+kubectl delete deploy cart -n gifticon
+kubectl delete svc cart -n gifticon
+kubectl apply -f kubernetes/deployment.yml
+kubectl expose deploy cart --type="ClusterIP" --port=8080 -n gifticon
+```
+
+- seige를 사용하여 pod 배포 직전에 모니터링 준비함
+```
+kubectl exec -it pod/siege-d484db9c-sksnb -c siege -n gifticon -- /bin/bash
+http POST http://gifticon:8080/gifticons gifticonId="1005" name="Moca" availableQuantity="1000000" price="5000"
+
+siege -c10 -t30S -r10 -v --content-type "application/json" 'http://cart:8080/carts POST {"gifticonId": "1005", "quantity":1}'
+```
+
+- readiness probe 설정을 제거하였으므로, pod 배포 중 서비스가 아직 올라오지 않아 요청처리 실패 (siege 실행중에 아래 2번째 줄을 실행하도록 함)
+```
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/cart:v3 .
+kubectl set image deploy cart cart=user05skccacr.azurecr.io/cart:v3 -n gifticon
+```
+![image](https://user-images.githubusercontent.com/84003381/124537055-1e2fcb80-de54-11eb-8b03-ac92feb94bc5.png)
+![image](https://user-images.githubusercontent.com/84003381/124537093-2f78d800-de54-11eb-8b1d-3de44ba6f0c3.png)
+
 
 
