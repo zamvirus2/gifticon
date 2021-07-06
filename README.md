@@ -437,3 +437,20 @@ siege -c100 -t60S -r10 -v --content-type "application/json" 'http://cart:8080/ca
 ![image](https://user-images.githubusercontent.com/84003381/124525824-a9509780-de3b-11eb-83e5-5a0cbdb33acd.png)
 
 
+- siege로 동시사용자 200명, 120초간 장바구니 쇼핑 부하발생
+```
+siege -c200 -t120S -r10 -v --content-type "application/json" 'http://cart:8080/carts POST {"gifticonId": "1005", "quantity":1}'
+```
+
+- Autoscaling 모니터링시, replica가 늘어났다가 부하가 적어지면 다시 replica가 줄어드는 것을 확인
+![image](https://user-images.githubusercontent.com/84003381/124531673-f8052e00-de49-11eb-9363-f37fe38727e0.png)
+
+- pod가 증가한 상태
+![image](https://user-images.githubusercontent.com/84003381/124531811-3b5f9c80-de4a-11eb-95b5-82f6b4b831fa.png)
+
+- 부하 감소로 pod가 다시 줄어든 상태
+![image](https://user-images.githubusercontent.com/84003381/124531883-61853c80-de4a-11eb-84f4-ac12860f7585.png)
+
+
+
+
