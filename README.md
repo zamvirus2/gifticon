@@ -526,6 +526,26 @@ kubectl set image deploy cart cart=user05skccacr.azurecr.io/cart:v1 -n gifticon
 
 ### 4.6. Config Map
 
+- cart서비스의 deployment.yml 파일 내 아래와 같이 configmap 설정을 추가
+![image](https://user-images.githubusercontent.com/84003381/124543765-d3688080-de60-11eb-8705-7aabbf3d8fd3.png)
+
+- 설정을 소스에서 불러올 수 있도록 application.yml 에도 아래 내용 추가
+![image](https://user-images.githubusercontent.com/84003381/124543896-1296d180-de61-11eb-9e9d-74c5492f710e.png)
+
+- 소스에서 configmap 값을 읽어오게끔 일부 수정
+![image](https://user-images.githubusercontent.com/84003381/124543996-43770680-de61-11eb-84df-90f38265d572.png)
+
+- configmap 생성 및 정상 생성여부 확인
+![image](https://user-images.githubusercontent.com/84003381/124544160-92bd3700-de61-11eb-8d25-c1c4e3083bc4.png)
+
+- 이후 cart 서비스 호출시 정상처리 확인 가능
+```
+http POST http://cart:8080/carts gifticonId=1005 quantity=10
+```
+
+- configmap 삭제된 상태에서 cart 서비스 호출시에는 오류발생하는것을 확인 가능
+![image](https://user-images.githubusercontent.com/84003381/124544452-170fba00-de62-11eb-8f36-0729d004e79c.png)
+
 
 
 
