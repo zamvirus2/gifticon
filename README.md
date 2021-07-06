@@ -469,7 +469,7 @@ siege -c200 -t120S -r10 -v --content-type "application/json" 'http://cart:8080/c
 
 
 
-### Zero-downtime deploy (Readiness Probe)
+### 4.5. Zero-downtime deploy (Readiness Probe)
 
 - Zero-downtime deploy를 확인하기 위해 autoscale 설정 및 circuit breaker 설정 제거
 ```
@@ -506,6 +506,26 @@ kubectl set image deploy cart cart=user05skccacr.azurecr.io/cart:v3 -n gifticon
 siege -c10 -t30S -r10 -v --content-type "application/json" 'http://cart:8080/carts POST {"gifticonId": "1005", "quantity":1}'
 ```
 ![image](https://user-images.githubusercontent.com/84003381/124537093-2f78d800-de54-11eb-8b1d-3de44ba6f0c3.png)
+
+
+- 다시 cart 서비스에서 readiness probe 설정을 추가
+![image](https://user-images.githubusercontent.com/84003381/124538255-48828880-de56-11eb-8a39-5a49e41d42b0.png)
+
+
+- readiness probe 추가된 deployment.yml 적용 후, 특정버전의 Docker image로 재배포를 수행
+```
+kubectl apply -f kubernetes/deployment.yml
+
+az acr build --registry user05skccacr --image user05skccacr.azurecr.io/cart:v1 .
+kubectl set image deploy cart cart=user05skccacr.azurecr.io/cart:v1 -n gifticon
+```
+
+- siege 수행결과, 가용성이 다시 확보된것을 확인
+![image](https://user-images.githubusercontent.com/84003381/124538477-a6af6b80-de56-11eb-958d-ca699243cb74.png)
+
+
+### 4.6. Config Map
+
 
 
 
