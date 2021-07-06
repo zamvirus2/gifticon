@@ -448,8 +448,25 @@ siege -c200 -t120S -r10 -v --content-type "application/json" 'http://cart:8080/c
 - pod가 증가한 상태
 ![image](https://user-images.githubusercontent.com/84003381/124531811-3b5f9c80-de4a-11eb-95b5-82f6b4b831fa.png)
 
-- 부하 감소로 pod가 다시 줄어든 상태
+- 부하 감소로 pod가 다시 줄어들고 있는 상태
 ![image](https://user-images.githubusercontent.com/84003381/124531883-61853c80-de4a-11eb-84f4-ac12860f7585.png)
+
+
+### 4.4. Self-healing (Liveness Probe)
+
+- liveness probe 테스트 하기 전 gifticon 서비스의 상태 (정상)
+![image](https://user-images.githubusercontent.com/84003381/124532321-42d37580-de4b-11eb-98d4-a83dade218f6.png)
+
+
+- gifticon 서비스의 deployment.yml 에 Liveness Probe 옵션을 아래와 같이 변경한다. liveness probe 동작을 실패 처리하기 위해 오픈되지 않은 포트를 지정
+![image](https://user-images.githubusercontent.com/84003381/124532968-8084ce00-de4c-11eb-8ffb-ac01455e70d9.png)
+
+- gifticon 서비스에 변경된 liveness probe 설정이 적용되었음을 확인
+![image](https://user-images.githubusercontent.com/84003381/124533443-48ca5600-de4d-11eb-848e-3241e296a9f0.png)
+
+- gifticon 서비스의 liveness probe에 따라 계속해서 restart를 시도하고 있는것을 확인할 수 있다
+![image](https://user-images.githubusercontent.com/84003381/124533589-90e97880-de4d-11eb-86f8-f461e25e8a54.png)
+
 
 
 
