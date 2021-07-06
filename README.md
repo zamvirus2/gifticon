@@ -426,3 +426,9 @@ siege -c100 -t60S -r10 -v --content-type "application/json" 'http://cart:8080/ca
 
 
 
+### 4.3. Autoscale (HPA)
+
+- Autoscaling 테스트를 위해 아래와 같이 리소스 제한설정 추가
+- 위치 : cart/kubernetes/deployment.yml
+![image](https://user-images.githubusercontent.com/84003381/124525398-28dd6700-de3a-11eb-93b1-3b9782f3d81e.png)
+
