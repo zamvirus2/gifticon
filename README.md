@@ -428,7 +428,12 @@ siege -c100 -t60S -r10 -v --content-type "application/json" 'http://cart:8080/ca
 
 ### 4.3. Autoscale (HPA)
 
-- Autoscaling 테스트를 위해 아래와 같이 리소스 제한설정 추가
+- Autoscaling 테스트를 위해 cart 서비스에 대해 아래와 같이 리소스 제한설정 추가
 - 위치 : cart/kubernetes/deployment.yml
 ![image](https://user-images.githubusercontent.com/84003381/124525398-28dd6700-de3a-11eb-93b1-3b9782f3d81e.png)
+
+
+- replica 를 동적으로 늘려주도록 HPA 를 설정한다. CPU 사용량이 15프로를 넘어서면 replica 를 10개까지 늘려준다.
+![image](https://user-images.githubusercontent.com/84003381/124525824-a9509780-de3b-11eb-83e5-5a0cbdb33acd.png)
+
 
